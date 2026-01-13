@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Word Trainer</title>
+
+<style>
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        background: #111;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 700px;
+        padding: 2rem;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .mode-buttons button,
+    .answer-button,
+    .next-button {
+        width: 100%;
+        padding: 1.2rem;
+        margin: 0.5rem 0;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .mode-buttons button {
+        background: #2c2c2c;
+        color: #fff;
+    }
+
+    .mode-buttons button.active {
+        background: #4caf50;
+        color: #000;
+        font-weight: bold;
+    }
+
+    .word-box {
+        margin: 2rem 0;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.3rem;
+        border-radius: 10px;
+        border: none;
+        text-align: center;
+    }
+
+    .answer-button {
+        background: #2196f3;
+        color: #fff;
+    }
+
+    .next-button {
+        background: #4caf50;
+        color: #000;
+        display: none;
+    }
+
+    .feedback {
+        margin-top: 1rem;
+        font-size: 1.4rem;
+        min-height: 2rem;
+    }
+
+    .correct {
+        color: #4caf50;
+    }
+
+    .wrong {
+        color: #ff5252;
+    }
+</style>
+</head>
+
+<body>
+<div class="app">
+    <h1>English Word Trainer</h1>
+
+    <div class="mode-buttons">
+        <button id="no-en" class="active">Norwegian → English</button>
+        <button id="en-no">English → Norwegian</button>
+    </div>
+
+    <div class="word-box" id="word"></div>
+
+    <input type="text" id="answer" placeholder="Type your answer">
+
+    <button class="answer-button" id="check">Check answer</button>
+    <button class="next-button" id="next">Next word</button>
+
+    <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+const words = [
+    { en: "the", no: "den" },
+    { en: "be", no: "være" },
+    { en: "to", no: "til" },
+    { en: "of", no: "av" },
+    { en: "and", no: "og" },
+    { en: "a", no: "en" },
+    { en: "in", no: "i" },
+    { en: "that", no: "at" },
+    { en: "have", no: "ha" },
+    { en: "I", no: "jeg" },
+    { en: "it", no: "det" },
+    { en: "for", no: "for" },
+    { en: "not", no: "ikke" },
+    { en: "on", no: "på" },
+    { en: "with", no: "med" },
+    { en: "he", no: "han" },
+    { en: "as", no: "som" },
+    { en: "you", no: "du" },
+    { en: "do", no: "gjøre" },
+    { en: "at", no: "ved" },
+    { en: "this", no: "denne" },
+    { en: "but", no: "men" },
+    { en: "his", no: "hans" },
+    { en: "by", no: "av" },
+    { en: "from", no: "fra" },
+    { en: "they", no: "de" },
+    { en: "we", no: "vi" },
+    { en: "say", no: "si" },
+    { en: "her", no: "hennes" },
+    { en: "she", no: "hun" }
+];
+
+let mode = "no-en";
+let currentWord = {};
+
+const wordBox = document.getElementById("word");
+const answerInput = document.getElementById("answer");
+const feedback = document.getElementById("feedback");
+const checkBtn = document.getElementById("check");
+const nextBtn = document.getElementById("next");
+
+document.getElementById("no-en").onclick = () => setMode("no-en");
+document.getElementById("en-no").onclick = () => setMode("en-no");
+
+function setMode(newMode) {
+    mode = newMode;
+    document.getElementById("no-en").classList.toggle("active", mode === "no-en");
+    document.getElementById("en-no").classList.toggle("active", mode === "en-no");
+    newWord();
+}
+
+function newWord() {
+    currentWord = words[Math.floor(Math.random() * words.length)];
+    wordBox.textContent = mode === "no-en" ? currentWord.no : currentWord.en;
+    answerInput.value = "";
+    feedback.textContent = "";
+    nextBtn.style.display = "none";
+}
+
+checkBtn.onclick = () => {
+    const userAnswer = answerInput.value.trim().toLowerCase();
+    const correctAnswer = mode === "no-en"
+        ? currentWord.en.toLowerCase()
+        : currentWord.no.toLowerCase();
+
+    if (userAnswer === correctAnswer) {
+        feedback.textContent = "Correct!";
+        feedback.className = "feedback correct";
+    } else {
+        feedback.textContent = `Wrong. Correct answer: ${correctAnswer}`;
+        feedback.className = "feedback wrong";
+    }
+    nextBtn.style.display = "block";
+};
+
+nextBtn.onclick = newWord;
+
+newWord();
+</script>
+</body>
+</html>
